@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yigitisdan | Resmi Devlet Portalı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-bright: #ffdf00;
+            --dark-bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --red: #8b0000;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background: radial-gradient(circle at top, #1a1a1a 0%, #050505 100%);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-brand { display: flex; align-items: center; gap: 15px; }
+        .nav-flag { width: 40px; border: 1px solid var(--gold); }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--gold), #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-btn {
+            background: linear-gradient(45deg, var(--gold), #b8860b);
+            border: none; padding: 12px 25px; font-weight: 800; cursor: pointer;
+            border-radius: 3px; color: #000; text-transform: uppercase; transition: 0.3s;
+        }
+
+        .cta-btn:hover { background: #fff; box-shadow: 0 0 15px var(--gold); }
+
+        /* HERO */
+        .hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920') center/cover;
+            margin-top: 50px;
+        }
+
+        .main-flag { width: 170px; border: 3px solid var(--gold); margin-bottom: 20px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.4); }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 8vw, 5rem); letter-spacing: 12px; margin: 0; }
+
+        /* EKONOMİ BANDI */
+        .ticker-wrap { background: #000; padding: 12px 0; border-bottom: 1px solid var(--gold); overflow: hidden; }
+        .ticker { display: inline-block; white-space: nowrap; animation: ticker-anim 40s linear infinite; }
+        @keyframes ticker-anim { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .ticker span { margin-right: 50px; font-weight: bold; font-size: 0.85rem; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .section-title { font-family: 'Cinzel', serif; text-align: center; font-size: 2.2rem; margin: 60px auto 30px; border-bottom: 2px solid var(--gold); display: table; padding-bottom: 10px; }
+
+        /* KONSEY GRID */
+        .council-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .admin-card { background: var(--card-bg); padding: 25px 15px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.05); text-align: center; transition: 0.4s; }
+        .admin-card:hover { border-color: var(--gold); transform: translateY(-5px); background: rgba(212, 175, 55, 0.08); }
+        .role-tag { color: var(--gold); font-size: 0.6rem; letter-spacing: 2px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .name-tag { font-family: 'Cinzel', serif; font-size: 1rem; }
+
+        /* MARŞ */
+        .anthem-section { background: rgba(212, 175, 55, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); padding: 50px 20px; text-align: center; margin: 60px 0; border-radius: 10px; }
+        .anthem-text { font-family: 'Playfair Display', serif; font-size: 1.3rem; line-height: 2; font-style: italic; color: #eee; }
+
+        /* SPOR & VİLAYETLER */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .box { background: var(--card-bg); padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .league-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .league-table th { background: var(--gold); color: #000; padding: 10px; font-size: 0.8rem; }
+        .league-table td { padding: 12px; text-align: center; border-bottom: 1px solid #222; }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; color: #000; padding: 40px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+
+        footer { padding: 80px 20px; text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.2); background: #000; margin-top: 100px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="bayrak.png" class="nav-flag" onerror="this.src='https://via.placeholder.com/40x25/9e1b32/c5a028?text='">
+            <div class="logo">YIGITISDAN</div>
+        </div>
+        <button class="cta-btn" onclick="openPortal()">Devlet Girişi</button>
+    </nav>
+
+    <header class="hero">
+        <img src="bayrak.png" class="main-flag" onerror="this.src='https://via.placeholder.com/170x110/9e1b32/c5a028?text=BAYRAK'">
+        <p style="letter-spacing: 5px; color: var(--gold); font-size: 0.7rem; margin-bottom: 10px;">RESMİ DEVLET PORTALI</p>
+        <h1>YIGITISDAN</h1>
+        <p style="font-family:'Playfair Display'; font-style:italic; font-size:1.3rem; margin-top:15px; opacity:0.8">"Güç Adaletten, İstikbal Göklerdedir"</p>
+    </header>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span><strong style="color:var(--gold)">EKONOMİ:</strong> 1 YD = 10.00 TL ▲</span>
+            <span><strong style="color:var(--gold)">SPOR:</strong> Metemuyu Gücü Ligde Doludizgin ⚔️</span>
+            <span><strong style="color:var(--gold)">GÜNCEL:</strong> Yüksek Devlet Konseyi Tam Kadro Görevde.</span>
+            <span><strong style="color:var(--gold)">DIŞİŞLERİ:</strong> Ali Fırat Durdu Uluslararası Temaslara Başladı.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <h2 class="section-title">Yüksek Devlet Konseyi</h2>
+        <div class="council-grid">
+            <div class="admin-card" style="border-color: var(--gold);"><span class="role-tag">Kurucu</span><div class="name-tag">Yunus İzzeddin Güder</div></div>
+            <div class="admin-card" style="border-color: var(--gold);"><span class="role-tag">Devlet Başkanı</span><div class="name-tag">Muhammed Berkay Sarı</div></div>
+            <div class="admin-card"><span class="role-tag">Başkan Yardımcısı</span><div class="name-tag">Musab Tarık Yolalan</div></div>
+            <div class="admin-card"><span class="role-tag">Başkan Yardımcısı</span><div class="name-tag">İlyas Molla Hüseyinoğlu</div></div>
+            <div class="admin-card" style="background: rgba(212,175,55,0.05);"><span class="role-tag">Dışişleri Bakanı</span><div class="name-tag">Ali Fırat Durdu</div></div>
+            <div class="admin-card"><span class="role-tag">Meclis Başkanı</span><div class="name-tag">Abdullah Eymen Berber</div></div>
+            <div class="admin-card"><span class="role-tag">Adalet Bakanı</span><div class="name-tag">Ali Osman Atasoy</div></div>
+            <div class="admin-card"><span class="role-tag">Donanma Komutanı</span><div class="name-tag">Ali Kerem Daşdemir</div></div>
+            <div class="admin-card"><span class="role-tag">Genelkurmay Başkanı</span><div class="name-tag">Ali Samet Sarı</div></div>
+            <div class="admin-card"><span class="role-tag">İstihbarat Başkanı</span><div class="name-tag">Ziya Kağan Erkan</div></div>
+            <div class="admin-card"><span class="role-tag">Defterdar</span><div class="name-tag">Ali Turab Kargidanoğlu</div></div>
+            <div class="admin-card"><span class="role-tag">İçişleri Bakanı</span><div class="name-tag">Muhammed Emin Sarı</div></div>
+        </div>
+
+        <div class="anthem-section">
+            <h2 style="font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 30px;">Milli Marş</h2>
+            <div class="anthem-text">
+                Karadeniz'in bağrında yükselen sesimiz,<br>
+                Yigitisdan toprağı, bitmez hevesimiz.<br>
+                Mavi sular üstünde sarsılmaz kalemiz,<br>
+                Adaletle parlayan sonsuz meşalemiz.<br><br>
+                Yunus'un izinde, Berkay'ın gücüyle,<br>
+                Yükselir bu sancak, imanlı özüyle.<br>
+                İstikbal bizdedir, ecdadın sözüyle,<br>
+                Bakıyoruz yarına, milletin gözüyle!
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="box">
+                <h3 style="font-family:'Cinzel'; color:var(--gold); margin-top:0;">🏆 Yigitisdan Süper Ligi</h3>
+                <table class="league-table">
+                    <thead><tr><th>Takım</th><th>P</th><th>Form</th></tr></thead>
+                    <tbody>
+                        <tr><td>⚔️ Metemuyu Gücü</td><td>29</td><td>🟩🟩🟩</td></tr>
+                        <tr><td>⚙️ Görk Sanayi Spor</td><td>25</td><td>🟩🟧🟩</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box" style="text-align: center; border: 1px solid var(--red);">
+                <div style="font-size: 2.5rem;">🦁</div>
+                <h3 style="font-family:'Cinzel'; color:var(--gold); margin:10px 0;">MİLLİ TAKIM</h3>
+                <p style="font-size: 0.8rem; opacity: 0.8;">"Lions of Yigitisdan"<br>FIFA Sıralaması: 42</p>
+            </div>
+            <div class="box">
+                <h3 style="font-family:'Cinzel'; color:var(--gold); margin-top:0;">📍 Vilayetler</h3>
+                <ul style="list-style:none; padding:0; font-size: 0.9rem; line-height:2">
+                    <li>🏛️ <strong>Metemuyu:</strong> İdari Başkent</li>
+                    <li>🏭 <strong>Görk:</strong> Sanayi ve Teknoloji Merkezi</li>
+                    <li>🏟️ <strong>Yunus Arena:</strong> Ulusal Stadyum</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">Stratejik Harita</h2>
+        <div style="border: 4px solid #111; border-radius: 10px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+            <img src="haritasi.png" style="width: 100%; display: block;" onerror="this.src='https://via.placeholder.com/1200x500/111/d4af37?text=YIGITISDAN+HARITASI'">
+        </div>
+
+    </div>
+
+    <div id="portalModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="font-family:'Cinzel'">Vatandaşlık Portalı</h2>
+            <form action="https://formspree.io/f/mqezolpv" method="POST">
+                <input type="text" name="name" placeholder="Ad Soyad" required>
+                <input type="email" name="email" placeholder="Gmail" required>
+                <input type="tel" name="phone" placeholder="Telefon" required>
+                <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
+                <button type="button" onclick="closePortal()" style="background:none; border:none; color:#999; margin-top:15px; cursor:pointer">Pencereyi Kapat</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <img src="bayrak.png" style="width: 60px; border: 1px solid var(--gold); margin-bottom: 20px;" onerror="this.style.display='none'">
+        <div class="logo" style="font-size: 2rem; margin-bottom: 10px;">YIGITISDAN</div>
+        <p style="opacity: 0.5; font-size: 0.8rem;">Yigitisdan Cumhuriyeti Bilgi Teknolojileri Dairesi © 2024</p>
+        <p style="color: var(--gold); font-weight: bold; margin-top: 20px; letter-spacing: 2px;">1 YD = 10.00 TL</p>
+    </footer>
+
+    <script>
+        function openPortal() { document.getElementById('portalModal').style.display = 'flex'; }
+        function closePortal() { document.getElementById('portalModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
