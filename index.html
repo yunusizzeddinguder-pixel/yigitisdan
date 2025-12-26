@@ -226,23 +226,14 @@
     <div class="modal-box">
         <h2 style="font-family:'Cinzel'">Vatandaşlık Portalı</h2>
         
-        <form id="vatandasFormu" onsubmit="return basvuruYap(event)">
-            <input type="text" name="name" placeholder="Ad Soyad" required>
-            <input type="email" name="email" placeholder="Gmail" required>
-            <input type="tel" name="phone" placeholder="Telefon" required>
-            <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
-            
-            <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem;">İşlemi İptal Et ve Kapat</p>
-        </form>
-
-        <div id="basvuruSonuc" style="display:none; text-align:center;">
-            <div style="padding: 20px; background: #f0fdf4; border: 2px dashed #22c55e; border-radius: 8px;">
-                <h3 style="color: #166534; margin: 0;">BAŞVURU ALINDI! ✅</h3>
-                <p style="color: #333; font-size: 0.9rem; margin: 10px 0;">Takip Numaranız:</p>
-                <div id="takipNo" style="font-size: 1.5rem; font-weight: bold; color: #b91c1c; font-family: monospace; margin-bottom: 15px;"></div>
-                
-                <button onclick="closePortal()" class="cta-btn" style="width:100%;">TAMAM</button>
-            </div>
+        <div id="portalIcerik">
+            <form id="vatandasFormu" onsubmit="return basvuruYap(event)">
+                <input type="text" name="name" id="userName" placeholder="Ad Soyad" required>
+                <input type="email" name="email" placeholder="Gmail" required>
+                <input type="tel" name="phone" placeholder="Telefon" required>
+                <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
+                <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem; text-align:center;">Pencereyi Kapat</p>
+            </form>
         </div>
     </div>
 </div>
@@ -286,44 +277,24 @@
         </footer>
 
 <script>
-    // 1. PORTAL AÇMA VE KAPATMA
     function openPortal() {
-        const modal = document.getElementById('portalModal');
-        const icerik = document.getElementById('portalIcerik');
-        
-        if(modal) {
-            modal.style.display = 'flex';
-            // Formu her açılışta sıfırdan oluştur (İptal et yazısı burada)
-            if(icerik) {
-                icerik.innerHTML = `
-                    <form id="vatandasFormu" onsubmit="return basvuruYap(event)">
-                        <input type="text" name="name" id="userName" placeholder="Ad Soyad" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-                        <input type="email" name="email" placeholder="Gmail" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-                        <input type="tel" name="phone" placeholder="Telefon" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-                        <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
-                        <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem; text-align:center;">Pencereyi Kapat</p>
-                    </form>
-                `;
-            }
-        }
+        document.getElementById('portalModal').style.display = 'flex';
     }
 
     function closePortal() {
-        const modal = document.getElementById('portalModal');
-        if(modal) modal.style.display = 'none';
+        document.getElementById('portalModal').style.display = 'none';
+        // Kapandığında formu eski haline getirmek istersen sayfayı yenileyebilirsin
     }
 
-    // 2. BAŞVURU SİSTEMİ VE KART TASARIMI
     function basvuruYap(event) {
-        if (event) {
-            event.preventDefault();
-        }
+        event.preventDefault(); // Sayfayı yenilemeyi durdur
 
+        // Formdaki ismi al
         const isim = document.getElementById('userName').value;
         const takipNo = "YG-2025-" + Math.floor(1000 + Math.random() * 9000);
-        const portalIcerik = document.getElementById('portalIcerik');
+        const icerik = document.getElementById('portalIcerik');
 
-        // Formspree gönderimi
+        // Formspree gönderimi (arka planda)
         const data = new FormData(event.target);
         fetch("https://formspree.io/f/mqezolpv", {
             method: "POST",
@@ -331,55 +302,43 @@
             headers: { 'Accept': 'application/json' }
         });
 
-        // YEŞİL KUTU YERİNE GELECEK OLAN KART TASARIMI
-        portalIcerik.innerHTML = `
-            <div style="text-align:center; animation: fadeIn 0.4s ease-out;">
-                <h3 style="color: #166534; font-family:'Cinzel'; margin: 0 0 15px 0;">BAŞVURU ONAYLANDI! ✅</h3>
+        // EKRANI SİL VE KARTI ÇİZ
+        icerik.innerHTML = `
+            <div style="text-align:center; animation: fadeIn 0.5s;">
+                <h3 style="color: #166534; font-family:'Cinzel';">BAŞVURU ONAYLANDI! ✅</h3>
                 
-                <div style="width: 100%; max-width: 340px; margin: 0 auto 20px auto; background: linear-gradient(135deg, #d4af37 0%, #fff9e6 50%, #d4af37 100%); padding: 15px; border-radius: 12px; border: 3px solid #000; color: #000; font-family: 'Cinzel', serif; box-shadow: 0 8px 25px rgba(0,0,0,0.3); text-align: left; box-sizing: border-box; border-style: double;">
-                    <div style="border: 1px solid rgba(0,0,0,0.2); padding: 10px;">
-                        <div style="font-size: 0.6rem; font-weight: 900; border-bottom: 2px solid #000; margin-bottom: 10px; text-align:center; letter-spacing: 1px;">YIGITISDAN CUMHURİYETİ <br> VATANDAŞLIK CÜZDANI</div>
-                        
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 65px; height: 85px; background: rgba(0,0,0,0.05); border: 1px dashed #000; display: flex; align-items: center; justify-content: center; font-size: 0.4rem; color: #333; text-align:center;">RESMİ <br> MÜHÜR</div>
-                            
-                            <div>
-                                <div style="font-size: 0.5rem; opacity: 0.8; font-family: 'sans-serif'; font-weight:bold;">AD SOYAD:</div>
-                                <div style="font-size: 0.9rem; font-weight: 900; margin-bottom: 8px; color: #000;">${isim.toUpperCase()}</div>
-                                
-                                <div style="font-size: 0.5rem; opacity: 0.8; font-family: 'sans-serif'; font-weight:bold;">TAKİP NUMARASI:</div>
-                                <div style="font-size: 0.8rem; font-weight: 900; font-family: monospace; color: #b91c1c;">${takipNo}</div>
-                            </div>
+                <div style="width: 100%; max-width: 320px; margin: 15px auto; background: linear-gradient(135deg, #d4af37 0%, #fff 50%, #d4af37 100%); padding: 15px; border-radius: 10px; border: 2px solid #000; color: #000; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                    <div style="font-size: 0.5rem; font-weight: bold; text-align: center; border-bottom: 1px solid #000; margin-bottom: 10px; padding-bottom: 5px;">YIGITISDAN CUMHURİYETİ KİMLİK KARTI</div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div style="width: 50px; height: 65px; background: #eee; border: 1px solid #ccc; font-size: 0.4rem; display: flex; align-items: center; justify-content: center; text-align: center;">FOTOĞRAF</div>
+                        <div>
+                            <div style="font-size: 0.5rem; opacity: 0.7;">İSİM:</div>
+                            <div style="font-size: 0.8rem; font-weight: bold;">${isim.toUpperCase()}</div>
+                            <div style="font-size: 0.5rem; opacity: 0.7; margin-top: 5px;">NO:</div>
+                            <div style="font-size: 0.7rem; font-weight: bold; color: #b91c1c;">${takipNo}</div>
                         </div>
-                        
-                        <div style="font-size: 0.45rem; margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 5px;">"Her şey Metemuyu ve Görk için."</div>
                     </div>
                 </div>
 
-                <p style="font-size: 0.75rem; color: #666; margin-bottom: 15px;">Cüzdanınızın ekran görüntüsünü alabilirsiniz.</p>
-                <button onclick="closePortal()" class="cta-btn" style="width:100%;">SİSTEMDEN ÇIK</button>
+                <button onclick="closePortal()" class="cta-btn" style="width:100%;">KAPAT</button>
             </div>
         `;
 
         return false;
     }
 
-    // 3. CANLI EKONOMİ MOTORU
-    function ekonomiDongusu() {
+    // Ekonomi Bandı
+    setInterval(() => {
         const kur = document.getElementById('yd-kur');
-        const yon = document.getElementById('yd-yon');
-        if(kur && yon) {
-            let suanki = parseFloat(kur.innerText);
-            let fark = (Math.random() * 0.04 - 0.02).toFixed(2);
-            kur.innerText = (suanki + parseFloat(fark)).toFixed(2);
-            yon.innerText = fark >= 0 ? "▲" : "▼";
-            yon.style.color = fark >= 0 ? "#00ff00" : "#ff0000";
+        if(kur) {
+            let yeni = (parseFloat(kur.innerText) + (Math.random() * 0.04 - 0.02)).toFixed(2);
+            kur.innerText = yeni;
         }
-    }
-    setInterval(ekonomiDongusu, 3000);
+    }, 3000);
 </script>
 
 </body> </html>
+
 
 
 
