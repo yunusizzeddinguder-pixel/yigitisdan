@@ -231,16 +231,17 @@
             <input type="email" name="email" placeholder="Gmail" required>
             <input type="tel" name="phone" placeholder="Telefon" required>
             <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
-            <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem;">Pencereyi Kapat</p>
+            
+            <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem;">İşlemi İptal Et ve Kapat</p>
         </form>
 
         <div id="basvuruSonuc" style="display:none; text-align:center;">
-    <h3 style="color:green;">Başvuru Başarılı!</h3>
-    <p>Takip Numaranız:</p>
-    <div id="takipNo" style="font-size:1.5rem; font-weight:bold; color:red; margin:10px 0;"></div>
-    <button onclick="closePortal()" class="cta-btn">Kapat</button>
-</div>
-                <button onclick="closePortal()" class="cta-btn" style="width:100%; margin-top:15px;">KAPAT</button>
+            <div style="padding: 20px; background: #f0fdf4; border: 2px dashed #22c55e; border-radius: 8px;">
+                <h3 style="color: #166534; margin: 0;">BAŞVURU ALINDI! ✅</h3>
+                <p style="color: #333; font-size: 0.9rem; margin: 10px 0;">Takip Numaranız:</p>
+                <div id="takipNo" style="font-size: 1.5rem; font-weight: bold; color: #b91c1c; font-family: monospace; margin-bottom: 15px;"></div>
+                
+                <button onclick="closePortal()" class="cta-btn" style="width:100%;">TAMAM</button>
             </div>
         </div>
     </div>
@@ -367,6 +368,7 @@
 </script>
 
 </body> </html>
+
 
 
 
