@@ -279,109 +279,50 @@
         </footer>
 
 <script>
-    // 1. VATANDAŞLIK PORTALI (MODAL) KONTROLLERİ
-    function openPortal() { 
-        document.getElementById('portalModal').style.display = 'flex'; 
-    }
-    
-    function closePortal() { 
-        // Pencere kapatıldığında formu eski haline getir (opsiyonel)
-        document.getElementById('portalModal').style.display = 'none'; 
-    }
+        // 1. Portalı Aç/Kapat
+        function openPortal() { 
+            document.getElementById('portalModal').style.display = 'flex'; 
+        }
+        function closePortal() { 
+            document.getElementById('portalModal').style.display = 'none'; 
+        }
 
-    // 2. EKONOMİ VE BORSA MOTORU (CANLI GÜNCELLEME)
-    function ekonomiMotoru() {
-        // YD Kurunu hafifçe oynatır
-        let kurElement = document.getElementById('yd-kur');
-        let yonElement = document.getElementById('yd-yon');
-        
-        if(kurElement && yonElement) {
-            let suankiKur = parseFloat(kurElement.innerText);
-            // Rastgele -0.02 ile +0.02 arası değişim
-            let degisim = (Math.random() * 0.04 - 0.02).toFixed(2); 
-            let yeniKur = (suankiKur + parseFloat(degisim)).toFixed(2);
+        // 2. Başvuru Yap ve Takip No Üret
+        function basvuruYap(event) {
+            event.preventDefault(); // Sayfayı yenilemez
+
+            // Takip Numarası Oluştur
+            const no = "YG-2025-" + Math.floor(1000 + Math.random() * 9000);
             
-            kurElement.innerText = yeniKur;
-            
-            // Renk ve Ok Yönü Ayarı
-            if (degisim >= 0) {
-                yonElement.innerText = "▲";
-                yonElement.style.color = "#00ff00"; // Yeşil
-            } else {
-                yonElement.innerText = "▼";
-                yonElement.style.color = "#ff0000"; // Kırmızı
+            // Arka planda Gmail'e gönder (AJAX)
+            const formData = new FormData(event.target);
+            fetch("https://formspree.io/f/mqezolpv", {
+                method: "POST",
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            // Formu gizle ve numarayı göster
+            event.target.style.display = 'none';
+            const sonucAlani = document.getElementById('basvuruSonuc');
+            if(sonucAlani) {
+                sonucAlani.style.display = 'block';
+                document.getElementById('takipNo').innerText = no;
             }
         }
 
-        // Borsa (Metemuyu Gücü) Değişimi
-        let borsaElement = document.getElementById('borsa-metemuyu');
-        if(borsaElement) {
-            let borsaDegisim = (Math.random() * 4 + 1).toFixed(1);
-            borsaElement.innerText = borsaDegisim;
-        }
-    }
-    // Her 3 saniyede bir ekonomi verilerini tazeler
-    setInterval(ekonomiMotoru, 3000);
-
-    // 3. BAŞVURU SİSTEMİ VE TAKİP NUMARASI ÜRETİCİ
-    function basvuruYap(event) {
-        event.preventDefault(); // Sayfanın yenilenmesini engeller
-
-        // Form verilerini al
-        const form = event.target;
-        const data = new FormData(form);
-        
-        // Rastgele Takip Numarası Üret (Örn: YG-2025-4821)
-        const yil = 2025;
-        const rastgele = Math.floor(1000 + Math.random() * 9000);
-        const numara = "YG-" + yil + "-" + rastgele;
-
-        // ARAYÜZ GÜNCELLEME: Formu gizle, sonuç ekranını göster
-        form.style.display = 'none';
-        const sonucAlani = document.getElementById('basvuruSonuc');
-        const takipNoAlani = document.getElementById('takipNo');
-        
-        if(sonucAlani && takipNoAlani) {
-            sonucAlani.style.display = 'block';
-            takipNoAlani.innerText = numara;
-        }
-
-        // GMAIL'E GÖNDERİM (Formspree Arka Plan İşlemi)
-        fetch("https://formspree.io/f/mqezolpv", {
-            method: "POST",
-            body: data,
-            headers: {
-                'Accept': 'application/json'
+        // 3. Canlı Ekonomi Bandı
+        setInterval(() => {
+            const kur = document.getElementById('yd-kur');
+            if(kur) {
+                let degisim = (Math.random() * 0.04 - 0.02).toFixed(2);
+                kur.innerText = (parseFloat(kur.innerText) + parseFloat(degisim)).toFixed(2);
             }
-        }).then(response => {
-            if (!response.ok) {
-                console.log("Veri iletiminde bir sorun oluştu, ancak numara üretildi.");
-            }
-        }).catch(error => {
-            console.error("Hata:", error);
-        });
-        function sorgula() {
-    const no = document.getElementById('sorguNo').value.trim().toUpperCase();
-    const sonucDiv = document.getElementById('sorguSonuc');
-    
-    sonucDiv.style.display = 'block';
-    
-    if (no === "") {
-        sonucDiv.innerHTML = "Lütfen bir numara giriniz.";
-        sonucDiv.style.color = "white";
-    } else if (no === "YG-2025-5836") {
-        // Bu numaraya özel bir yanıt verelim (Örnek olarak)
-        sonucDiv.innerHTML = "YG-2025-5836: Başvurunuz Yüksek Konsey onayından geçti. Vatandaşlık kaydınız oluşturuluyor! ✅";
-        sonucDiv.style.color = "#00ff00";
-    } else {
-        // Diğer tüm numaralar için genel bir yanıt
-        sonucDiv.innerHTML = no + ": Başvurunuz sisteme ulaşmış olup inceleme aşamasındadır. ⏳";
-        sonucDiv.style.color = "var(--gold)";
-    }
-    }
-</script>
-</body>
-</html>
+        }, 3000);
+    </script>
+
+</body> </html>
+
 
 
 
