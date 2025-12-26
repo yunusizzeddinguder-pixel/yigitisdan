@@ -226,7 +226,7 @@
     <div class="modal-box">
         <h2 style="font-family:'Cinzel'">Vatandaşlık Portalı</h2>
         
-        <form id="vatandasFormu" onsubmit="basvuruYap(event); return false;">
+        <form id="vatandasFormu" onsubmit="return basvuruYap(event)">
             <input type="text" name="name" placeholder="Ad Soyad" required>
             <input type="email" name="email" placeholder="Gmail" required>
             <input type="tel" name="phone" placeholder="Telefon" required>
@@ -234,13 +234,12 @@
             <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem;">Pencereyi Kapat</p>
         </form>
 
-        <div id="basvuruSonuc" style="display:none;">
-            <div style="padding: 20px; background: #f0fdf4; border: 2px dashed #22c55e; border-radius: 8px;">
-                <h3 style="color: #166534; margin: 0;">BAŞVURU ALINDI! ✅</h3>
-                <p style="color: #333; font-size: 0.9rem; margin: 10px 0;">Dosyanız Yüksek Konsey'e iletildi.</p>
-                <div style="background: #fff; padding: 10px; border: 1px solid #ddd; font-weight: bold;">
-                    TAKİP NO: <span id="takipNo" style="color: #b91c1c; font-family: monospace;"></span>
-                </div>
+        <div id="basvuruSonuc" style="display:none; text-align:center;">
+    <h3 style="color:green;">Başvuru Başarılı!</h3>
+    <p>Takip Numaranız:</p>
+    <div id="takipNo" style="font-size:1.5rem; font-weight:bold; color:red; margin:10px 0;"></div>
+    <button onclick="closePortal()" class="cta-btn">Kapat</button>
+</div>
                 <button onclick="closePortal()" class="cta-btn" style="width:100%; margin-top:15px;">KAPAT</button>
             </div>
         </div>
@@ -368,6 +367,7 @@
 </script>
 
 </body> </html>
+
 
 
 
