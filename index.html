@@ -289,12 +289,23 @@
     // 1. PORTAL AÇMA VE KAPATMA FONKSİYONLARI
     function openPortal() {
         const modal = document.getElementById('portalModal');
-        const form = document.getElementById('vatandasFormu');
-        const sonuc = document.getElementById('basvuruSonuc');
+        const icerik = document.getElementById('portalIcerik');
         
-        if(modal) modal.style.display = 'flex';
-        if(form) form.style.display = 'block'; // Formu her açılışta göster
-        if(sonuc) sonuc.style.display = 'none'; // Sonucu her açılışta gizle
+        if(modal) {
+            modal.style.display = 'flex';
+            // Her açıldığında formu sıfırla (Eğer daha önce başvuru yapıldıysa temizlensin)
+            if(icerik) {
+                icerik.innerHTML = `
+                    <form id="vatandasFormu" onsubmit="return basvuruYap(event)">
+                        <input type="text" name="name" placeholder="Ad Soyad" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        <input type="email" name="email" placeholder="Gmail" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        <input type="tel" name="phone" placeholder="Telefon" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        <button type="submit" class="cta-btn" style="width:100%; margin-top:10px">BAŞVURUYU GÖNDER</button>
+                        <p onclick="closePortal()" style="cursor:pointer; color:#999; margin-top:15px; font-size: 0.8rem; text-align:center;">İşlemi İptal Et ve Kapat</p>
+                    </form>
+                `;
+            }
+        }
     }
 
     function closePortal() {
@@ -302,72 +313,88 @@
         if(modal) modal.style.display = 'none';
     }
 
-    // 2. BAŞVURU SİSTEMİ (SAYFA YENİLENMESİNİ ENGELLER)
+    // 2. BAŞVURU VE VATANDAŞLIK CÜZDANI ÜRETME
     function basvuruYap(event) {
-        // Sayfanın yenilenmesini kesin olarak durdurur
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
 
-        // Rastgele Takip Numarası Üret
+        const isim = event.target.name.value; // Kullanıcının girdiği ismi al
         const takipNo = "YG-2025-" + Math.floor(1000 + Math.random() * 9000);
+        const portalIcerik = document.getElementById('portalIcerik');
 
-        // HTML Elemanlarını Bul
-        const form = document.getElementById('vatandasFormu');
-        const sonucAlani = document.getElementById('basvuruSonuc');
-        const takipNoYazi = document.getElementById('takipNo');
-
-        // Formu Gizle, Sonucu Göster (Aynı beyaz kutu içinde)
-        if (form && sonucAlani && takipNoYazi) {
-            form.style.display = 'none';
-            sonucAlani.style.display = 'block';
-            takipNoYazi.innerText = takipNo;
-        }
-
-        // Arka planda Gmail'e (Formspree) gönder
+        // Formspree üzerinden Gmail'e arka planda gönder
         const data = new FormData(event.target);
         fetch("https://formspree.io/f/mqezolpv", {
             method: "POST",
             body: data,
             headers: { 'Accept': 'application/json' }
-        }).catch(err => console.error("Gönderim hatası:", err));
+        }).catch(err => console.error("Veri iletim hatası:", err));
 
-        return false; // Tarayıcıya "dur" komutu
+        // TÜM FORMU SİL VE "VATANDAŞLIK CÜZDANI" GÖRSELİNİ KOY
+        portalIcerik.innerHTML = `
+            <div style="text-align:center; animation: fadeIn 0.5s ease;">
+                <h3 style="color: #166534; margin: 0 0 15px 0; font-family:'Cinzel';">BAŞVURU ONAYLANDI! ✅</h3>
+                
+                <div id="kimlik-kart" style="width: 100%; background: linear-gradient(135deg, #d4af37 0%, #fff9e6 50%, #d4af37 100%); padding: 15px; border-radius: 12px; border: 3px solid #000; color: #000; font-family: 'Cinzel', serif; position: relative; box-shadow: 0 8px 25px rgba(0,0,0,0.3); margin-bottom: 20px; box-sizing: border-box; text-align: left;">
+                    <div style="border: 1px solid rgba(0,0,0,0.2); padding: 10px;">
+                        <div style="font-size: 0.6rem; font-weight: 900; border-bottom: 2px solid #000; margin-bottom: 10px; text-align:center; letter-spacing: 1px;">YIGITISDAN CUMHURİYETİ <br> VATANDAŞLIK CÜZDANI</div>
+                        
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 65px; height: 85px; background: #e0e0e0; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 0.4rem; color: #333; text-align:center; font-family: 'Montserrat';">YIGITISDAN <br> MÜHÜRLÜ</div>
+                            
+                            <div>
+                                <div style="font-size: 0.5rem; opacity: 0.8; font-family: 'Montserrat';">AD SOYAD:</div>
+                                <div style="font-size: 0.9rem; font-weight: 900; margin-bottom: 8px; color: #000;">${isim.toUpperCase()}</div>
+                                
+                                <div style="font-size: 0.5rem; opacity: 0.8; font-family: 'Montserrat';">TAKİP NUMARASI:</div>
+                                <div style="font-size: 0.75rem; font-weight: 900; font-family: monospace; color: #b91c1c;">${takipNo}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="font-size: 0.45rem; margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 5px;">"Her şey Metemuyu ve Görk için."</div>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.75rem; color: #555; margin-bottom: 15px; font-family: 'Montserrat';">Cüzdanınızın ekran görüntüsünü alabilirsiniz.</p>
+                <button onclick="closePortal()" class="cta-btn" style="width:100%;">SİSTEMDEN ÇIK</button>
+            </div>
+        `;
+
+        return false;
     }
 
-    // 3. CANLI EKONOMİ MOTORU
-    function ekonomiDongusu() {
-        const kurElement = document.getElementById('yd-kur');
-        const yonElement = document.getElementById('yd-yon');
-        const borsaElement = document.getElementById('borsa-metemuyu');
+    // 3. CANLI EKONOMİ DÖNGÜSÜ
+    function ekonomiGuncelle() {
+        const kur = document.getElementById('yd-kur');
+        const yon = document.getElementById('yd-yon');
+        const borsa = document.getElementById('borsa-metemuyu');
 
-        if (kurElement && yonElement) {
-            let suankiKur = parseFloat(kurElement.innerText);
-            let degisim = (Math.random() * 0.06 - 0.03).toFixed(2); // -0.03 ile +0.03 arası
-            let yeniKur = (suankiKur + parseFloat(degisim)).toFixed(2);
-            
-            kurElement.innerText = yeniKur;
-            
-            if (degisim >= 0) {
-                yonElement.innerText = "▲";
-                yonElement.style.color = "#00ff00";
+        if(kur && yon) {
+            let suanki = parseFloat(kur.innerText);
+            let fark = (Math.random() * 0.06 - 0.03).toFixed(2);
+            let yeni = (suanki + parseFloat(fark)).toFixed(2);
+            kur.innerText = yeni;
+
+            if(fark >= 0) {
+                yon.innerText = "▲";
+                yon.style.color = "#00ff00";
             } else {
-                yonElement.innerText = "▼";
-                yonElement.style.color = "#ff0000";
+                yon.innerText = "▼";
+                yon.style.color = "#ff0000";
             }
         }
         
-        if (borsaElement) {
-            borsaElement.innerText = (Math.random() * 5 + 1).toFixed(1);
+        if(borsa) {
+            borsa.innerText = (Math.random() * 6 + 1).toFixed(1);
         }
     }
-
-    // Her 3 saniyede bir ekonomiyi güncelle
-    setInterval(ekonomiDongusu, 3000);
+    setInterval(ekonomiGuncelle, 3000);
 </script>
 
 </body> </html>
+
 
 
 
